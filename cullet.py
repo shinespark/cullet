@@ -21,11 +21,12 @@ def main():
     li = soup.find('ul', class_='toplist').find_all('li')
     first_link = li[0].find('a')['href']
 
-    f = open(dirpath + '/latest.txt', 'r+')
-    latest_link = f.read().strip()
-    if latest_link == '':
-        f.write(first_link)
-    f.close()
+    try:
+        f = open(dirpath + '/latest.txt', 'r')
+        latest_link = f.read().strip()
+        f.close()
+    except IOError:
+        latest_link = ''
 
     if first_link == latest_link:
         sys.exit()
@@ -72,11 +73,11 @@ def main():
         f = open(y['save_path'] + '/cullet.atom', 'w')
         f.write(atom)
         f.close()
+        print('complete!')
+
     except IOError:
         print('error')
         print('cannot open iofile', file=sys.stderr)
-
-    print('complete!')
 
 
 if __name__ == "__main__":
