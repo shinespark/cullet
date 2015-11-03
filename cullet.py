@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 # coding: utf-8
 from bs4 import BeautifulSoup
+import os
 import re
 import sys
 import urllib.request
+import yaml
 
 
 def main():
     url = 'http://weekly.ascii.jp/comic/kareto/'
     domain = 'http://weekly.ascii.jp'
+    dirpath = os.path.abspath(os.path.dirname(__file__))
+    y = yaml.load(open(dirpath + '/conf.yaml').read())
 
     res = urllib.request.urlopen(url)
     date = res.getheader('date')
@@ -17,7 +21,7 @@ def main():
     li = soup.find('ul', class_='toplist').find_all('li')
     first_link = li[0].find('a')['href']
 
-    f = open('./latest.txt', 'r+')
+    f = open(dirpath + '/latest.txt', 'r+')
     latest_link = f.read().strip()
     if latest_link == '':
         f.write(first_link)
@@ -60,12 +64,12 @@ def main():
         atom += '</entry>\n'
     atom += '</feed>'
 
-    f = open('./latest.txt', 'w')
+    f = open(dirpath + '/latest.txt', 'w')
     f.write(first_link)
     f.close()
 
     try:
-        f = open('./cullet.atom', 'w')
+        f = open(y['save_path'] + '/cullet.atom', 'w')
         f.write(atom)
         f.close()
     except IOError:
