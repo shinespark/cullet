@@ -29,6 +29,7 @@ def main():
         latest_link = ''
 
     if first_link == latest_link:
+        print('already newest!')
         sys.exit()
 
     atom = '''<?xml version="1.0" encoding="utf-8"?>
